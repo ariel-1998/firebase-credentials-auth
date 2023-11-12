@@ -4,10 +4,10 @@ import { Card, Alert, Form, Button, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { TypeRegistraionData, registrationSchema } from "../models/UserModel";
+import { TypeProfileUpdate, profileUpdateSchema } from "../models/UserModel";
 
 const ResetCredentials: React.FC = () => {
-  const { user } = useAuth();
+  const { user, emailUpdate, PasswordUpdate, handleErrors } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -16,21 +16,27 @@ const ResetCredentials: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TypeRegistraionData>({
-    resolver: zodResolver(registrationSchema),
+  } = useForm<TypeProfileUpdate>({
+    resolver: zodResolver(profileUpdateSchema),
   });
 
-  const registerUser = async (data: TypeRegistraionData) => {
-    // try {
-    //   setLoading(true);
-    //   await userSignUp(data.email, data.password);
-    //   setError("");
-    //   navigate("/");
-    // } catch (error: any) {
-    //   handleErrors(setError, error.code);
-    // }
-    // setLoading(false);
-    console.log(data);
+  const registerUser = async (data: TypeProfileUpdate) => {
+    const promises: Promise<any>[] = [];
+
+    if (data.email) promises.push(emailUpdate(data.email));
+    if (data.password) promises.push(PasswordUpdate(data.password));
+
+    setLoading(true);
+    Promise.all(promises)
+      .then(() => {
+        navigate("/");
+      })
+      .catch((error) => {
+        handleErrors(setError, error.code);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (

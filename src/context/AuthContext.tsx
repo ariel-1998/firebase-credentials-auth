@@ -12,6 +12,8 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  updateEmail,
+  updatePassword,
 } from "firebase/auth";
 
 type AuthContextProps = {
@@ -21,6 +23,8 @@ type AuthContextProps = {
   handleErrors(setter: (msg: string) => void, code: string): void;
   userLogout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  emailUpdate: (email: string) => Promise<void>;
+  PasswordUpdate: (password: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextProps | null>(null);
@@ -66,6 +70,16 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return sendPasswordResetEmail(auth, email);
   };
 
+  const emailUpdate = (email: string) => {
+    if (!user) throw new Error();
+    return updateEmail(user, email);
+  };
+
+  const PasswordUpdate = (password: string) => {
+    if (!user) throw new Error();
+    return updatePassword(user, password);
+  };
+
   function handleErrors(setter: (msg: string) => void, code: string) {
     switch (code) {
       case "auth/email-already-exists":
@@ -99,6 +113,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         userLogout,
         resetPassword,
         handleErrors,
+        emailUpdate,
+        PasswordUpdate,
       }}
     >
       {!loadingUser && children}
