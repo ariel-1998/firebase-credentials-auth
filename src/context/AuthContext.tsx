@@ -10,6 +10,7 @@ import {
   User,
   UserCredential,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
@@ -19,6 +20,7 @@ type AuthContextProps = {
   userLogin: (email: string, password: string) => Promise<UserCredential>;
   handleErrors(setter: (msg: string) => void, code: string): void;
   userLogout: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextProps | null>(null);
@@ -39,6 +41,15 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authState) => {
+      setUser(authState);
+      setLoadingUser(false);
+    });
+
+    return unsubscribe;
+  }, []);
+
   const userSignUp = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
@@ -51,14 +62,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return auth.signOut();
   };
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((authState) => {
-      setUser(authState);
-      setLoadingUser(false);
-    });
-
-    return unsubscribe;
-  }, []);
+  const resetPassword = (email: string) => {
+    return sendPasswordResetEmail(auth, email);
+  };
 
   function handleErrors(setter: (msg: string) => void, code: string) {
     switch (code) {
@@ -86,7 +92,14 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, userSignUp, userLogin, userLogout, handleErrors }}
+      value={{
+        user,
+        userSignUp,
+        userLogin,
+        userLogout,
+        resetPassword,
+        handleErrors,
+      }}
     >
       {!loadingUser && children}
     </AuthContext.Provider>

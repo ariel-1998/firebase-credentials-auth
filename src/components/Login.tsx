@@ -29,42 +29,41 @@ const Login: React.FC = () => {
   };
 
   return (
-    <>
-      <Card>
-        <Card.Header className="text-center">
-          <h3>
-            <strong>Log In</strong>
-          </h3>
-        </Card.Header>
-        <Card.Body className="p-5 pb-4">
-          {error && (
-            <Alert variant="danger" className="danger">
-              {error}
-            </Alert>
-          )}
-          <Form onSubmit={handleSubmit(loginUser)}>
-            <Form.Group id="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control {...register("email")} type="email" required />
-            </Form.Group>
-            <Form.Group id="password" className="mt-3">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                {...register("password")}
-                type="password"
-                required
-              />
-            </Form.Group>
-            <Button disabled={loading} type="submit" className="w-100 mt-4">
-              {!loading ? "Log In" : <Spinner animation="border" />}
-            </Button>
-          </Form>
-        </Card.Body>
-        <Card.Footer className="text-center">
+    <Card>
+      <Card.Header className="text-center">
+        <h3>
+          <strong>Log In</strong>
+        </h3>
+      </Card.Header>
+      <Card.Body className="p-5">
+        {error && (
+          <Alert variant="danger" className="danger">
+            {error}
+          </Alert>
+        )}
+        <Form onSubmit={handleSubmit(loginUser)}>
+          <Form.Group id="email">
+            <Form.Label>Email</Form.Label>
+            <Form.Control {...register("email")} type="email" required />
+          </Form.Group>
+          <Form.Group id="password" className="mt-3">
+            <Form.Label>Password</Form.Label>
+            <Form.Control {...register("password")} type="password" required />
+          </Form.Group>
+          <Button disabled={loading} type="submit" className="w-100 mt-4">
+            {!loading ? "Log In" : <Spinner animation="border" />}
+          </Button>
+        </Form>
+        <div className="text-center mt-2">
+          <Link to="/forgot-password">Forgot password?</Link>
+        </div>
+      </Card.Body>
+      <Card.Footer className="text-center">
+        <div>
           Don't have an account? <Link to="/signup">Sign Up</Link>
-        </Card.Footer>
-      </Card>
-    </>
+        </div>
+      </Card.Footer>
+    </Card>
   );
 };
 

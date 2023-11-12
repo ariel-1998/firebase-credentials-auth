@@ -1,10 +1,12 @@
 import { Container } from "react-bootstrap";
 import Signup from "./components/Signup";
-import AuthProvider, { useAuth } from "./context/AuthContext";
+import AuthProvider from "./context/AuthContext";
 import Login from "./components/Login";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ForgotPassword from "./components/ForgotPassword";
+import UpdateProfile from "./components/UpdateProfile";
 
 function App() {
   return (
@@ -17,10 +19,12 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route element={<ProtectedRoute redirect="/login" />}>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/" Component={Dashboard} />
+                <Route path="/update-profile" Component={UpdateProfile} />
               </Route>
               <Route path="/signup" Component={Signup} />
               <Route path="/login" Component={Login} />
+              <Route path="/forgot-password" Component={ForgotPassword} />
             </Routes>
           </BrowserRouter>
         </div>
