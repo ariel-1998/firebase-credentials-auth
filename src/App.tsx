@@ -2,7 +2,7 @@ import { Container } from "react-bootstrap";
 import Signup from "./components/Signup";
 import AuthProvider from "./context/AuthContext";
 import Login from "./components/Login";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ForgotPassword from "./components/ForgotPassword";
